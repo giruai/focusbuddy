@@ -2,7 +2,7 @@
 
 A minimal, beautiful Pomodoro timer with glassmorphism UI, haptic feedback, and smooth animations.
 
-![Timer Screen](screenshots/story-001-device.png)
+![Timer Screen](screenshots/mvp-final.png)
 
 ## Features
 
@@ -48,9 +48,7 @@ app/src/main/java/com/giruai/focusbuddy/
 └── util/            # Utilities (haptics, etc.)
 ```
 
-## Sprint Status
-
-**Current Sprint**: Sprint 1 — Foundation
+## Sprint 1 — Foundation ✅ COMPLETE
 
 | Story | Status | Description |
 |-------|--------|-------------|
@@ -63,7 +61,11 @@ app/src/main/java/com/giruai/focusbuddy/
 | story-007 | ✅ Done | DataStore preferences |
 | story-008 | ✅ Done | Settings screen UI |
 | story-009 | ✅ Done | Connect settings to timer |
-| story-010-012 | 📋 Planned | Haptics, sounds, polish |
+| story-010 | ✅ Done | Haptic feedback |
+| story-011 | ✅ Done | Completion sound |
+| story-012 | ✅ Done | Polish animations |
+
+**MVP Status**: ✅ **COMPLETE**
 
 ## License
 
