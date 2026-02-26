@@ -103,7 +103,11 @@ fun TimerScreen(
     }
 
     val timeText = String.format("%02d:%02d", display.minutes, display.seconds)
-    val displayLabel = if (display.isBreak) display.label else settings.sessionLabel
+    val displayLabel = when {
+        display.isBreak -> "Break Time"
+        display.isCompleted && !display.isBreak -> "Focus Complete!"
+        else -> settings.sessionLabel
+    }
 
     Box(
         modifier = modifier
@@ -114,7 +118,7 @@ fun TimerScreen(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Header with title
+            // Header with title - always Focus Buddy
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -124,9 +128,9 @@ fun TimerScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (display.isBreak) "Break Time" else "Focus Buddy",
+                    text = "Focus Buddy",
                     style = MaterialTheme.typography.titleLarge,
-                    color = if (display.isBreak) Success else TextPrimary,
+                    color = TextPrimary,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -140,11 +144,11 @@ fun TimerScreen(
                 color = if (display.isBreak) Success else Primary
             )
 
-            // Session Label / Status
+            // Session Label / Status - shows Break Time during break
             Text(
                 text = displayLabel,
                 fontSize = 16.sp,
-                color = TextSecondary,
+                color = if (display.isBreak) Success else TextSecondary,
                 modifier = Modifier.padding(top = 32.dp)
             )
 
