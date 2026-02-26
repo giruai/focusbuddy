@@ -48,6 +48,14 @@ app/src/main/java/com/giruai/focusbuddy/
 └── util/            # Utilities (haptics, etc.)
 ```
 
+## Sprint 3 — Bug Fixes ✅ COMPLETE
+
+| Story | Status | Description |
+|-------|--------|-------------|
+| story-018 | ✅ Done | Fix Session Label selection |
+| story-019 | ✅ Done | Fix drag handle in settings |
+| story-020 | ✅ Done | Add Focus Buddy title |
+
 ## Sprint 2 — UI Fixes ✅ COMPLETE
 
 | Story | Status | Description |
@@ -75,7 +83,7 @@ app/src/main/java/com/giruai/focusbuddy/
 | story-011 | ✅ Done | Completion sound |
 | story-012 | ✅ Done | Polish animations |
 
-**Status**: ✅ **RELEASE v1.0 READY** — 17/17 stories complete
+**Status**: ✅ **RELEASE v1.0.1 READY** — 20/20 stories complete
 
 ## License
 
