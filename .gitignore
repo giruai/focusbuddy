@@ -1,36 +1,29 @@
-# OpenClaw workspace files — NEVER commit
-SOUL.md
-AGENTS.md
-USER.md
-MEMORY.md
-HEARTBEAT.md
-IDENTITY.md
-TOOLS.md
-memory/
-screenshots/
-*.key
-*.jks
-keystore.properties
-
-# Android
+# Android/Gradle
+.gradle/
+build/
+app/build/
+local.properties
 *.iml
-.gradle
-/local.properties
-/.idea/
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.idea/
 *.apk
 *.aab
-*.ap_
-*.dex
-
-# Signing
-release/
+*.jks
 *.keystore
 
-# Env
-.env
-.env.*
+# OS
+.DS_Store
+Thumbs.db
+
+# OpenClaw workspace state
+.openclaw/
+
+# Misc
+*.log
+captures/
+.externalNativeBuild/
+.cxx/
+*.hprof
+
+# Keep planning and skills
+!planning/
+!skills/

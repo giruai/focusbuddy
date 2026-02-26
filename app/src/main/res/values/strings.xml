@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Focus Buddy</string>
+    <string name="timer_title">Focus Buddy</string>
+    <string name="settings_title">Settings</string>
+    <string name="focus_duration">Focus Duration</string>
+    <string name="break_duration">Break Duration</string>
+    <string name="session_label">Session Label</string>
+    <string name="mins">mins</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="deep_work_session">Deep Work Session</string>
+    <string name="study_session">Study Session</string>
+    <string name="creative_flow">Creative Flow</string>
+    <string name="meeting_prep">Meeting Prep</string>
+</resources>
