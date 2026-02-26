@@ -11,67 +11,92 @@
 ## User Story
 
 **As a** user  
-**I want** cambiar configuraciones fácilmente  
+**I want** cambiar configuraciones facilmente  
 **So that** personalize la app a mi gusto
 
 ---
 
 ## Acceptance Criteria
 
-### AC-1: Focus duration selector
-**Given** Settings screen  
+### AC-1: Bottom sheet container
+**Given** Settings opened  
 **When** I view it  
-**Then** I see "Focus Duration" label with píldoras: 25m, 30m, 45m
+**Then** it's a bottom sheet covering ~70% from bottom with rounded top corners (24dp)
 
-### AC-2: Break duration selector
-**Given** Settings screen  
-**When** I view it  
-**Then** I see "Break Duration" label with píldoras: 5m, 10m, 15m
+### AC-2: Header
+**Given** Settings sheet  
+**When** I view top  
+**Then** I see "Settings" (24sp, bold, left) and close `X` button (right)
 
-### AC-3: Haptics toggle
-**Given** Settings screen  
-**When** I view it  
-**Then** I see "Haptic Feedback" with toggle switch
+### AC-3: Focus Duration stepper
+**Given** Settings sheet  
+**When** I view  
+**Then** I see:
+- Label "Focus Duration" (14sp, gray)
+- `-` circle / `25 min` / `+` circle
+- Circles: 40dp, outlined `#3A3B55`
 
-### AC-4: Selection active state
-**Given** I tap "45m"  
-**When** I look at the pill  
-**Then** it has cyan/azul fill (active), others have transparent + border
+### AC-4: Break Duration stepper
+**Given** Settings sheet  
+**When** I view  
+**Then** same layout as Focus, default 5 min
 
-### AC-5: Toggle works
-**Given** haptics are on  
-**When** I tap the toggle  
-**Then** haptics turn off and toggle slides to off position
+### AC-5: Session Label pills
+**Given** Settings sheet  
+**When** I view  
+**Then** I see:
+- Label "Session Label"
+- Pills: "Deep Work Session", "Study Session", "Creative Flow", "Meeting Prep"
+- Active pill: filled `#4A9EFF`, white text
+- Inactive: `#2A2B45` bg, `#9CA3AF` text, outlined
+
+### AC-6: Interactions work
+**Given** Settings open  
+**When** I tap `+` / `-` / pills  
+**Then** values update and persist
 
 ---
 
 ## Tasks
 
-- [ ] **TASK-1:** Create `DurationSelector` component with pills → validates AC-1, AC-2
-- [ ] **TASK-2:** Create `SettingsToggle` component → validates AC-3
-- [ ] **TASK-3:** Build Settings screen layout → validates AC-1, AC-2, AC-3
-- [ ] **TASK-4:** Implement active/inactive pill styling → validates AC-4
-- [ ] **TASK-5:** Wire toggles to ViewModel → validates AC-5
-- [ ] **TASK-6:** Test on device → validates all ACs
+- [ ] **TASK-1:** Create bottom sheet container with rounded top → validates AC-1
+- [ ] **TASK-2:** Add header with title and close button → validates AC-2
+- [ ] **TASK-3:** Create DurationStepper component (- / value / +) → validates AC-3, AC-4
+- [ ] **TASK-4:** Create PillSelector component → validates AC-5
+- [ ] **TASK-5:** Add Focus Duration section → validates AC-3
+- [ ] **TASK-6:** Add Break Duration section → validates AC-4
+- [ ] **TASK-7:** Add Session Label section → validates AC-5
+- [ ] **TASK-8:** Wire to ViewModel for persistence → validates AC-6
+- [ ] **TASK-9:** Test on device → validates all ACs
 
 ---
 
 ## Dev Notes
 
 ### Architecture Hints
-- `SettingsViewModel` with `StateFlow<SettingsUiState>`
-- Pill buttons: `OutlinedButton` vs `Button` based on selection
-- Toggle: `Switch` from Material3
+- Use `ModalBottomSheet` from Material3
+- Or custom `BottomSheetScaffold`
+- Stepper: circular buttons with icon
 
-### Component API
+### UI Reference
+- **CRITICAL:** Consultar `skills/ui-reference/SKILL.md` antes de implementar
+- Imagen de referencia: `media/inbound/file_1---*.jpg`
+
+### Componentes a crear
 ```kotlin
-@Composable
-fun DurationSelector(
-    label: String,
-    options: List<Int>, // minutes
-    selected: Int,
-    onSelect: (Int) -> Unit
-)
+// ui/settings/components/
+- DurationStepper.kt
+- PillSelector.kt
+- SettingsBottomSheet.kt
+```
+
+### Colores exactos
+```kotlin
+val Surface = Color(0xFF252641)
+val SurfaceVariant = Color(0xFF2A2B45)
+val Border = Color(0xFF3A3B55)
+val Primary = Color(0xFF4A9EFF)
+val TextSecondary = Color(0xFF9CA3AF)
 ```
 
 ---
@@ -79,10 +104,12 @@ fun DurationSelector(
 ## Testing Notes
 
 ### Device Testing Checklist
-- [ ] Screenshot of Settings screen
-- [ ] Tap each duration pill, verify selection changes
-- [ ] Toggle haptics on/off, verify switch moves
-- [ ] Colors match spec (cyan/azul for active)
+- [ ] Screenshot of settings bottom sheet
+- [ ] Compare with reference image
+- [ ] Tap + increase duration
+- [ ] Tap - decrease duration
+- [ ] Tap pills change selection
+- [ ] Close button dismisses sheet
 
 ---
 
@@ -98,4 +125,5 @@ fun DurationSelector(
 
 - [ ] All tasks completed
 - [ ] All ACs verified on device with screenshots
-- [ ] Git commit: `feat(settings): implement settings screen UI (closes #8)`
+- [ ] UI matches reference image
+- [ ] Git commit: `feat(settings): implement settings bottom sheet (closes #8)`
