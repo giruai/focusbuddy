@@ -2,7 +2,7 @@
 
 A minimal, beautiful Pomodoro timer with glassmorphism UI, haptic feedback, and smooth animations.
 
-![Timer Screen](screenshots/mvp-final.png)
+![Timer Screen](screenshots/sprint2-timer-idle.png)
 
 ## Features
 
