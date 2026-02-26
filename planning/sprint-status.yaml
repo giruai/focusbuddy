@@ -1,0 +1,150 @@
+sprint:
+  name: "Sprint 1 — Foundation"
+  number: 1
+  start_date: "2026-02-27"
+  end_date: "2026-03-06"
+  status: "active"
+  
+stories:
+  # Epic 1: Setup
+  - id: "story-001"
+    title: "Create Android project structure"
+    epic: "epic-001"
+    priority: "must-have"
+    status: "ready-for-dev"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  - id: "story-002"
+    title: "Setup dependency injection with Hilt"
+    epic: "epic-001"
+    priority: "must-have"
+    status: "ready-for-dev"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  - id: "story-003"
+    title: "Implement navigation and theme"
+    epic: "epic-001"
+    priority: "must-have"
+    status: "ready-for-dev"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  # Epic 2: Timer Core
+  - id: "story-004"
+    title: "Implement timer logic and state management"
+    epic: "epic-002"
+    priority: "must-have"
+    status: "planned"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  - id: "story-005"
+    title: "Create progress ring with gradient animation"
+    epic: "epic-002"
+    priority: "must-have"
+    status: "planned"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  - id: "story-006"
+    title: "Build timer screen UI"
+    epic: "epic-002"
+    priority: "must-have"
+    status: "planned"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  # Epic 3: Settings
+  - id: "story-007"
+    title: "Setup DataStore for preferences"
+    epic: "epic-003"
+    priority: "must-have"
+    status: "planned"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  - id: "story-008"
+    title: "Implement settings screen UI"
+    epic: "epic-003"
+    priority: "must-have"
+    status: "planned"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  - id: "story-009"
+    title: "Connect settings to timer"
+    epic: "epic-003"
+    priority: "must-have"
+    status: "planned"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  # Epic 4: Haptics & Polish
+  - id: "story-010"
+    title: "Implement haptic feedback system"
+    epic: "epic-004"
+    priority: "should-have"
+    status: "planned"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  - id: "story-011"
+    title: "Add completion sound"
+    epic: "epic-004"
+    priority: "should-have"
+    status: "planned"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+    
+  - id: "story-012"
+    title: "Polish animations and transitions"
+    epic: "epic-004"
+    priority: "should-have"
+    status: "planned"
+    assignee: null
+    branch: null
+    pr: null
+    started: null
+    completed: null
+
+metrics:
+  total_stories: 12
+  completed: 0
+  in_progress: 0
+  ready_for_dev: 3
+  planned: 9
