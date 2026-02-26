@@ -87,11 +87,12 @@ fun TimerScreen(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Header
+            // Header with title
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 24.dp),
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 48.dp, bottom = 16.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {

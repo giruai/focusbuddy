@@ -1,6 +1,7 @@
 package com.giruai.focusbuddy.ui.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,40 +54,26 @@ fun SettingsScreen(
             .background(Background)
             .padding(bottom = 32.dp)
     ) {
-        // Header with drag handle
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        // Header - Clean without drag handle (ModalBottomSheet provides its own)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Drag handle
-            Box(
-                modifier = Modifier
-                    .padding(top = 12.dp, bottom = 8.dp)
-                    .size(width = 40.dp, height = 4.dp)
-                    .clip(RoundedCornerShape(2.dp))
-                    .background(TextSecondary.copy(alpha = 0.4f))
+            Text(
+                text = "Settings",
+                style = MaterialTheme.typography.headlineMedium,
+                color = TextPrimary,
+                fontWeight = FontWeight.Bold
             )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Settings",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = TextPrimary,
-                    fontWeight = FontWeight.Bold
+            IconButton(onClick = onNavigateBack) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = TextPrimary
                 )
-                IconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
-                        tint = TextPrimary
-                    )
-                }
             }
         }
 
@@ -288,6 +275,7 @@ private fun LabelPill(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(if (isSelected) Primary else SurfaceVariant)
+            .clickable { onClick() }
             .padding(horizontal = 16.dp, vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
