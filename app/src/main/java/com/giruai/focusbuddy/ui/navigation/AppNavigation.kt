@@ -3,18 +3,32 @@ package com.giruai.focusbuddy.ui.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.giruai.focusbuddy.ui.settings.SettingsScreen
 import com.giruai.focusbuddy.ui.timer.TimerScreen
-import com.giruai.focusbuddy.ui.timer.TimerViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    var showSettings by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false
+    )
 
     NavHost(
         navController = navController,
@@ -35,37 +49,25 @@ fun AppNavigation() {
                 )
             }
         ) {
-            // Get the shared ViewModel
-            val timerViewModel: TimerViewModel = hiltViewModel()
-
             TimerScreen(
                 onNavigateToSettings = {
-                    navController.navigate(Screen.Settings.route)
+                    showSettings = true
                 }
             )
         }
+    }
 
-        composable(
-            route = Screen.Settings.route,
-            enterTransition = {
-                slideInHorizontally(
-                    initialOffsetX = { it },
-                    animationSpec = tween(300)
-                )
-            },
-            exitTransition = {
-                slideOutHorizontally(
-                    targetOffsetX = { it },
-                    animationSpec = tween(300)
-                )
-            }
+    // Settings Bottom Sheet
+    if (showSettings) {
+        ModalBottomSheet(
+            onDismissRequest = { showSettings = false },
+            sheetState = sheetState,
+            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
+            modifier = Modifier.fillMaxSize()
         ) {
-            val timerViewModel: TimerViewModel = hiltViewModel()
-
             SettingsScreen(
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
+                onNavigateBack = { showSettings = false }
             )
         }
     }
