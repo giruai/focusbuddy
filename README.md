@@ -55,9 +55,12 @@ app/src/main/java/com/giruai/focusbuddy/
 | Story | Status | Description |
 |-------|--------|-------------|
 | story-001 | ✅ Done | Android project structure |
-| story-002 | 🔄 Ready | Hilt dependency injection |
-| story-003 | 🔄 Ready | Navigation & theme |
-| story-004-012 | 📋 Planned | Timer, settings, polish |
+| story-002 | ✅ Done | Hilt dependency injection |
+| story-003 | ✅ Done | Navigation & theme |
+| story-004 | ✅ Done | Timer logic |
+| story-005 | ✅ Done | Progress ring animation |
+| story-006 | ✅ Done | Timer screen UI |
+| story-007-012 | 📋 Planned | Settings, haptics, polish |
 
 ## License
 
