@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -17,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -31,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,19 +61,19 @@ fun TimerScreen(
         is TimerState.Idle -> Triple(
             settings.focusDuration,
             0,
-            1f
+            0f  // Empty at start
         )
         is TimerState.Running -> Triple(
             timerState.remainingSeconds / 60,
             timerState.remainingSeconds % 60,
-            timerState.progress
+            timerState.progress  // Fills up as time passes
         )
         is TimerState.Paused -> Triple(
             timerState.remainingSeconds / 60,
             timerState.remainingSeconds % 60,
-            timerState.progress
+            timerState.progress  // Fills up as time passes
         )
-        is TimerState.Completed -> Triple(0, 0, 0f)
+        is TimerState.Completed -> Triple(0, 0, 1f)  // Full at completion
     }
 
     val timeText = String.format("%02d:%02d", minutes, seconds)
@@ -126,8 +123,7 @@ fun TimerScreen(
 
             // Control Panel
             ControlPanel(
-                isRunning = uiState.isRunning,
-                isPaused = timerState is TimerState.Paused,
+                timerState = timerState,
                 onPlayPause = {
                     when (timerState) {
                         is TimerState.Idle -> viewModel.startTimer()
@@ -136,9 +132,12 @@ fun TimerScreen(
                         is TimerState.Completed -> viewModel.resetTimer()
                     }
                 },
-                onStop = {
-                    if (uiState.isRunning || timerState is TimerState.Paused) {
-                        viewModel.stopTimer()
+                onStartStop = {
+                    when (timerState) {
+                        is TimerState.Idle -> viewModel.startTimer()
+                        is TimerState.Running -> viewModel.stopTimer()
+                        is TimerState.Paused -> viewModel.stopTimer()
+                        is TimerState.Completed -> viewModel.resetTimer()
                     }
                 },
                 onSettings = onNavigateToSettings,
@@ -150,13 +149,17 @@ fun TimerScreen(
 
 @Composable
 private fun ControlPanel(
-    isRunning: Boolean,
-    isPaused: Boolean,
+    timerState: TimerState,
     onPlayPause: () -> Unit,
-    onStop: () -> Unit,
+    onStartStop: () -> Unit,
     onSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isRunning = timerState is TimerState.Running
+    val isPaused = timerState is TimerState.Paused
+    val isIdle = timerState is TimerState.Idle
+    val isCompleted = timerState is TimerState.Completed
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -166,41 +169,57 @@ private fun ControlPanel(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Play/Pause button
-        IconButton(
-            onClick = onPlayPause,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(SurfaceVariant)
-        ) {
-            Icon(
-                imageVector = if (isRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
-                contentDescription = if (isRunning) "Pause" else "Play",
-                tint = TextPrimary,
-                modifier = Modifier.size(24.dp)
-            )
+        // Left: Play/Pause button (shows play when paused or completed, pause when running)
+        // Hidden when idle
+        if (isRunning || isPaused || isCompleted) {
+            IconButton(
+                onClick = onPlayPause,
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(SurfaceVariant)
+            ) {
+                Icon(
+                    imageVector = if (isRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    contentDescription = if (isRunning) "Pause" else "Play",
+                    tint = TextPrimary,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        } else {
+            // Spacer to maintain layout when idle
+            Box(modifier = Modifier.size(48.dp))
         }
 
-        // Start/Stop button
-        val isActive = isRunning || isPaused
+        // Center: Start/Stop button (main action)
+        val buttonText = when {
+            isRunning -> "Stop"
+            isPaused -> "Stop"
+            isCompleted -> "Reset"
+            else -> "Start"
+        }
+
+        val buttonColors = when {
+            isRunning -> ButtonDefaults.buttonColors(containerColor = Success)
+            isPaused -> ButtonDefaults.buttonColors(containerColor = Success)
+            else -> ButtonDefaults.buttonColors(containerColor = Coral)
+        }
+
         Button(
-            onClick = onStop,
+            onClick = onStartStop,
             shape = RoundedCornerShape(24.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isActive) Success else Coral
-            ),
+            colors = buttonColors,
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             Text(
-                text = if (isActive) "Stop" else "Start",
+                text = buttonText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = 32.dp, vertical = 12.dp)
             )
         }
 
-        // Settings button
+        // Right: Settings button
         IconButton(
             onClick = onSettings,
             modifier = Modifier
