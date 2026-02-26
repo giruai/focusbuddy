@@ -48,6 +48,13 @@ app/src/main/java/com/giruai/focusbuddy/
 └── util/            # Utilities (haptics, etc.)
 ```
 
+## Sprint 4 — Break & Sound ✅ COMPLETE
+
+| Story | Status | Description |
+|-------|--------|-------------|
+| story-021 | ✅ Done | Break functionality (post-focus timer) |
+| story-022 | ✅ Done | Completion sound with system notification |
+
 ## Sprint 3 — Bug Fixes ✅ COMPLETE
 
 | Story | Status | Description |
@@ -83,7 +90,7 @@ app/src/main/java/com/giruai/focusbuddy/
 | story-011 | ✅ Done | Completion sound |
 | story-012 | ✅ Done | Polish animations |
 
-**Status**: ✅ **RELEASE v1.0.1 READY** — 20/20 stories complete
+**Status**: ✅ **RELEASE v1.1.0 READY** — 22/22 stories complete
 
 ## License
 

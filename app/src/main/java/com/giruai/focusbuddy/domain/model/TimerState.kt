@@ -10,7 +10,6 @@ sealed class TimerState {
         val remainingSeconds: Int,
         val totalSeconds: Int = durationMinutes * 60
     ) : TimerState() {
-        // Progress fills UP as timer runs (0.0 at start, 1.0 at end)
         val progress: Float = 1f - (remainingSeconds.toFloat() / totalSeconds.toFloat())
     }
     
@@ -19,13 +18,27 @@ sealed class TimerState {
         val remainingSeconds: Int,
         val totalSeconds: Int = durationMinutes * 60
     ) : TimerState() {
-        // Progress fills UP as timer runs (0.0 at start, 1.0 at end)
         val progress: Float = 1f - (remainingSeconds.toFloat() / totalSeconds.toFloat())
     }
     
     data class Completed(override val durationMinutes: Int = 25) : TimerState()
-}
-
-enum class TimerMode {
-    FOCUS, BREAK
+    
+    // Break states
+    data class BreakRunning(
+        override val durationMinutes: Int = 5,
+        val remainingSeconds: Int,
+        val totalSeconds: Int = durationMinutes * 60
+    ) : TimerState() {
+        val progress: Float = 1f - (remainingSeconds.toFloat() / totalSeconds.toFloat())
+    }
+    
+    data class BreakPaused(
+        override val durationMinutes: Int = 5,
+        val remainingSeconds: Int,
+        val totalSeconds: Int = durationMinutes * 60
+    ) : TimerState() {
+        val progress: Float = 1f - (remainingSeconds.toFloat() / totalSeconds.toFloat())
+    }
+    
+    data class BreakCompleted(override val durationMinutes: Int = 5) : TimerState()
 }
