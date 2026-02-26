@@ -57,11 +57,12 @@ fun TimerScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val timerState = uiState.timerState
+    val settings = uiState.settings
 
     // Calculate display values
     val (minutes, seconds, progress) = when (timerState) {
         is TimerState.Idle -> Triple(
-            timerState.durationMinutes,
+            settings.focusDuration,
             0,
             1f
         )
@@ -115,7 +116,7 @@ fun TimerScreen(
 
             // Session Label
             Text(
-                text = "Deep Work Session",
+                text = settings.sessionLabel,
                 fontSize = 16.sp,
                 color = TextSecondary,
                 modifier = Modifier.padding(top = 32.dp)
