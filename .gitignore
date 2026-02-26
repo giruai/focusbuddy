@@ -14,16 +14,9 @@ local.properties
 .DS_Store
 Thumbs.db
 
-# OpenClaw workspace state
-.openclaw/
-
 # Misc
 *.log
 captures/
 .externalNativeBuild/
 .cxx/
 *.hprof
-
-# Keep planning and skills
-!planning/
-!skills/
