@@ -60,7 +60,10 @@ app/src/main/java/com/giruai/focusbuddy/
 | story-004 | ✅ Done | Timer logic |
 | story-005 | ✅ Done | Progress ring animation |
 | story-006 | ✅ Done | Timer screen UI |
-| story-007-012 | 📋 Planned | Settings, haptics, polish |
+| story-007 | ✅ Done | DataStore preferences |
+| story-008 | ✅ Done | Settings screen UI |
+| story-009 | ✅ Done | Connect settings to timer |
+| story-010-012 | 📋 Planned | Haptics, sounds, polish |
 
 ## License
 
