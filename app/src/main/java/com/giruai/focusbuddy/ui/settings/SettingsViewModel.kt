@@ -72,6 +72,18 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun setHapticsEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setHapticsEnabled(enabled)
+        }
+    }
+
+    fun setSoundEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setSoundEnabled(enabled)
+        }
+    }
+
     data class SettingsUiState(
         val settings: TimerSettings = TimerSettings()
     )

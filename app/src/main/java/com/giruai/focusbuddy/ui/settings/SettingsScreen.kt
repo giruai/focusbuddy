@@ -18,6 +18,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.giruai.focusbuddy.ui.theme.Background
-import com.giruai.focusbuddy.ui.theme.Border
 import com.giruai.focusbuddy.ui.theme.Primary
 import com.giruai.focusbuddy.ui.theme.Surface
 import com.giruai.focusbuddy.ui.theme.SurfaceVariant
@@ -120,21 +121,77 @@ fun SettingsScreen(
                     "Meeting Prep"
                 )
 
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                // Simple row layout for labels
+                Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    labels.forEach { label ->
-                        val isSelected = label == settings.sessionLabel
-                        LabelPill(
-                            label = label,
-                            isSelected = isSelected,
-                            onClick = { viewModel.setSessionLabel(label) }
-                        )
+                    labels.chunked(2).forEach { rowLabels ->
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            rowLabels.forEach { label ->
+                                val isSelected = label == settings.sessionLabel
+                                LabelPill(
+                                    label = label,
+                                    isSelected = isSelected,
+                                    onClick = { viewModel.setSessionLabel(label) },
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Haptics Toggle
+                SettingsToggle(
+                    label = "Haptic Feedback",
+                    checked = settings.hapticsEnabled,
+                    onCheckedChange = viewModel::setHapticsEnabled
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Sound Toggle
+                SettingsToggle(
+                    label = "Completion Sound",
+                    checked = settings.soundEnabled,
+                    onCheckedChange = viewModel::setSoundEnabled
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun SettingsToggle(
+    label: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            fontSize = 16.sp,
+            color = TextPrimary
+        )
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Primary,
+                checkedTrackColor = Primary.copy(alpha = 0.5f)
+            )
+        )
     }
 }
 
@@ -216,46 +273,14 @@ private fun LabelPill(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(
-                if (isSelected) Primary else SurfaceVariant
-            )
-            .then(
-                if (!isSelected) {
-                    Modifier.background(SurfaceVariant)
-                } else Modifier
-            )
-            .padding(horizontal = 16.dp, vertical = 10.dp)
-            .clip(RoundedCornerShape(20.dp))
+            .background(if (isSelected) Primary else SurfaceVariant)
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
             fontSize = 14.sp,
-            color = if (isSelected) TextPrimary else TextSecondary,
-            modifier = Modifier.clip(RoundedCornerShape(20.dp))
+            color = if (isSelected) TextPrimary else TextSecondary
         )
-    }
-}
-
-// Simple FlowRow implementation
-@Composable
-private fun FlowRow(
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    // For simplicity, using a wrapping approach with actual layouts
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = verticalArrangement
-    ) {
-        // First row
-        Row(
-            horizontalArrangement = horizontalArrangement,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // This is a simplified version - in production use Accompanist FlowLayout
-            content()
-        }
     }
 }
