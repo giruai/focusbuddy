@@ -2,7 +2,9 @@
 
 A minimal, beautiful Pomodoro timer with glassmorphism UI, haptic feedback, and smooth animations.
 
-![Timer Screen](screenshots/sprint2-timer-idle.png)
+| Timer Screen | Settings Screen |
+|:------------:|:---------------:|
+| ![Timer](screenshots/timer-v1.1.1.png) | ![Settings](screenshots/settings-v1.1.1.png) |
 
 ## Features
 
@@ -54,8 +56,9 @@ app/src/main/java/com/giruai/focusbuddy/
 |-------|--------|-------------|
 | story-021 | ✅ Done | Break functionality (post-focus timer) |
 | story-022 | ✅ Done | Completion sound with system notification |
+| story-023 | ✅ Done | Fix break label position (show in session label) |
 
-## Sprint 3 — Bug Fixes ✅ COMPLETE
+**Status**: ✅ **RELEASE v1.1.1 READY** — 23/23 stories complete
 
 | Story | Status | Description |
 |-------|--------|-------------|
@@ -89,8 +92,6 @@ app/src/main/java/com/giruai/focusbuddy/
 | story-010 | ✅ Done | Haptic feedback |
 | story-011 | ✅ Done | Completion sound |
 | story-012 | ✅ Done | Polish animations |
-
-**Status**: ✅ **RELEASE v1.1.0 READY** — 22/22 stories complete
 
 ## License
 
