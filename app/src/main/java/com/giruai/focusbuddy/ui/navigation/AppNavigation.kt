@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.giruai.focusbuddy.ui.settings.SettingsScreen
 import com.giruai.focusbuddy.ui.timer.TimerScreen
+import com.giruai.focusbuddy.ui.timer.TimerViewModel
 
 @Composable
 fun AppNavigation() {
@@ -34,6 +35,9 @@ fun AppNavigation() {
                 )
             }
         ) {
+            // Get the shared ViewModel
+            val timerViewModel: TimerViewModel = hiltViewModel()
+
             TimerScreen(
                 onNavigateToSettings = {
                     navController.navigate(Screen.Settings.route)
@@ -56,6 +60,8 @@ fun AppNavigation() {
                 )
             }
         ) {
+            val timerViewModel: TimerViewModel = hiltViewModel()
+
             SettingsScreen(
                 onNavigateBack = {
                     navController.popBackStack()

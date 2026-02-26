@@ -18,151 +18,244 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.giruai.focusbuddy.ui.theme.Background
-import com.giruai.focusbuddy.ui.theme.Surface as AppSurface
+import com.giruai.focusbuddy.ui.theme.Border
+import com.giruai.focusbuddy.ui.theme.Primary
+import com.giruai.focusbuddy.ui.theme.Surface
+import com.giruai.focusbuddy.ui.theme.SurfaceVariant
 import com.giruai.focusbuddy.ui.theme.TextPrimary
 import com.giruai.focusbuddy.ui.theme.TextSecondary
 
 @Composable
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    val settings = uiState.settings
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Background)
     ) {
-        // Header
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 24.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = "Settings",
-                style = MaterialTheme.typography.headlineMedium,
-                color = TextPrimary,
-                fontWeight = FontWeight.Bold
-            )
-            IconButton(onClick = onNavigateBack) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
-                    tint = TextPrimary
+            // Header
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Settings",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = TextPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+                IconButton(onClick = onNavigateBack) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = TextPrimary
+                    )
+                }
+            }
+
+            // Content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+            ) {
+                // Focus Duration
+                DurationStepper(
+                    label = "Focus Duration",
+                    value = settings.focusDuration,
+                    unit = "min",
+                    onIncrement = viewModel::incrementFocusDuration,
+                    onDecrement = viewModel::decrementFocusDuration
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Break Duration
+                DurationStepper(
+                    label = "Break Duration",
+                    value = settings.breakDuration,
+                    unit = "min",
+                    onIncrement = viewModel::incrementBreakDuration,
+                    onDecrement = viewModel::decrementBreakDuration
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Session Label
+                Text(
+                    text = "Session Label",
+                    fontSize = 14.sp,
+                    color = TextSecondary,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+
+                val labels = listOf(
+                    "Deep Work Session",
+                    "Study Session",
+                    "Creative Flow",
+                    "Meeting Prep"
+                )
+
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    labels.forEach { label ->
+                        val isSelected = label == settings.sessionLabel
+                        LabelPill(
+                            label = label,
+                            isSelected = isSelected,
+                            onClick = { viewModel.setSessionLabel(label) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DurationStepper(
+    label: String,
+    value: Int,
+    unit: String,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = label,
+            fontSize = 14.sp,
+            color = TextSecondary,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            IconButton(
+                onClick = onDecrement,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(SurfaceVariant)
+            ) {
+                Text(
+                    "-",
+                    color = TextPrimary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+            Row(
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = value.toString(),
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimary
+                )
+                Text(
+                    text = " $unit",
+                    fontSize = 16.sp,
+                    color = TextSecondary,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
+            IconButton(
+                onClick = onIncrement,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(SurfaceVariant)
+            ) {
+                Text(
+                    "+",
+                    color = TextPrimary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }
+    }
+}
 
-        // Content placeholder
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 80.dp, start = 24.dp, end = 24.dp),
-            horizontalAlignment = Alignment.Start
+@Composable
+private fun LabelPill(
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(
+                if (isSelected) Primary else SurfaceVariant
+            )
+            .then(
+                if (!isSelected) {
+                    Modifier.background(SurfaceVariant)
+                } else Modifier
+            )
+            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .clip(RoundedCornerShape(20.dp))
+    ) {
+        Text(
+            text = label,
+            fontSize = 14.sp,
+            color = if (isSelected) TextPrimary else TextSecondary,
+            modifier = Modifier.clip(RoundedCornerShape(20.dp))
+        )
+    }
+}
+
+// Simple FlowRow implementation
+@Composable
+private fun FlowRow(
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    // For simplicity, using a wrapping approach with actual layouts
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = verticalArrangement
+    ) {
+        // First row
+        Row(
+            horizontalArrangement = horizontalArrangement,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = "Focus Duration",
-                fontSize = 14.sp,
-                color = TextSecondary,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                IconButton(
-                    onClick = { },
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(AppSurface)
-                ) {
-                    Text("-", color = TextPrimary, fontSize = 20.sp)
-                }
-                Text(
-                    text = "25 min",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextPrimary
-                )
-                IconButton(
-                    onClick = { },
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(AppSurface)
-                ) {
-                    Text("+", color = TextPrimary, fontSize = 20.sp)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Text(
-                text = "Break Duration",
-                fontSize = 14.sp,
-                color = TextSecondary,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                IconButton(
-                    onClick = { },
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(AppSurface)
-                ) {
-                    Text("-", color = TextPrimary, fontSize = 20.sp)
-                }
-                Text(
-                    text = "5 min",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextPrimary
-                )
-                IconButton(
-                    onClick = { },
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(AppSurface)
-                ) {
-                    Text("+", color = TextPrimary, fontSize = 20.sp)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Text(
-                text = "Session Label",
-                fontSize = 14.sp,
-                color = TextSecondary,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-            Text(
-                text = "Deep Work Session",
-                fontSize = 16.sp,
-                color = TextPrimary,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(com.giruai.focusbuddy.ui.theme.Primary)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
+            // This is a simplified version - in production use Accompanist FlowLayout
+            content()
         }
     }
 }
