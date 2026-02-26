@@ -19,6 +19,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.giruai.focusbuddy.ui.settings.SettingsScreen
+import com.giruai.focusbuddy.ui.theme.Background
+import com.giruai.focusbuddy.ui.theme.TextPrimary
 import com.giruai.focusbuddy.ui.timer.TimerScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +65,8 @@ fun AppNavigation() {
             onDismissRequest = { showSettings = false },
             sheetState = sheetState,
             shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
+            containerColor = Background,
+            contentColor = TextPrimary,
             modifier = Modifier.fillMaxSize()
         ) {
             SettingsScreen(
