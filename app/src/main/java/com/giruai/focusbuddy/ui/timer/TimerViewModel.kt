@@ -2,6 +2,8 @@ package com.giruai.focusbuddy.ui.timer
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.media.RingtoneManager
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.giruai.focusbuddy.data.model.TimerSettings
@@ -35,14 +37,13 @@ class TimerViewModel @Inject constructor(
     private var mediaPlayer: MediaPlayer? = null
 
     init {
-        // Collect settings changes
         settingsRepository.getSettings()
             .onEach { settings ->
                 val currentTimerState = _uiState.value.timerState
-                // Only update idle/completed timers, don't affect running/paused
                 val newTimerState = when (currentTimerState) {
                     is TimerState.Idle -> TimerState.Idle(settings.focusDuration)
                     is TimerState.Completed -> TimerState.Idle(settings.focusDuration)
+                    is TimerState.BreakCompleted -> TimerState.Idle(settings.focusDuration)
                     else -> currentTimerState
                 }
                 _uiState.update {
@@ -60,14 +61,38 @@ class TimerViewModel @Inject constructor(
 
         val currentState = _uiState.value.timerState
         val settings = _uiState.value.settings
-        val totalSeconds = when (currentState) {
-            is TimerState.Idle -> settings.focusDuration * 60
-            is TimerState.Paused -> currentState.remainingSeconds
-            is TimerState.Running -> return // Already running
-            is TimerState.Completed -> settings.focusDuration * 60
+        
+        when (currentState) {
+            is TimerState.Idle -> startFocusTimer(settings.focusDuration * 60, settings)
+            is TimerState.Paused -> startFocusTimer(currentState.remainingSeconds, settings)
+            is TimerState.Running -> return
+            is TimerState.Completed -> startFocusTimer(settings.focusDuration * 60, settings)
+            is TimerState.BreakCompleted -> startFocusTimer(settings.focusDuration * 60, settings)
+            else -> {} // Break states handled separately
         }
+    }
 
+    fun startBreak() {
+        hapticsHelper.tick()
+        val settings = _uiState.value.settings
+        startBreakTimer(settings.breakDuration * 60, settings)
+    }
+
+    fun skipBreak() {
+        hapticsHelper.tick()
+        val settings = _uiState.value.settings
+        _uiState.update {
+            it.copy(
+                timerState = TimerState.Idle(settings.focusDuration),
+                isRunning = false,
+                isBreak = false
+            )
+        }
+    }
+
+    private fun startFocusTimer(totalSeconds: Int, settings: TimerSettings) {
         timerJob?.cancel()
+        _uiState.update { it.copy(isBreak = false) }
         timerJob = viewModelScope.launch {
             var remaining = totalSeconds
             while (remaining > 0) {
@@ -84,31 +109,65 @@ class TimerViewModel @Inject constructor(
                 delay(1000)
                 remaining--
             }
-            // Timer completed
-            _uiState.update {
-                it.copy(
-                    timerState = TimerState.Completed(settings.focusDuration),
-                    isRunning = false
-                )
+            onFocusComplete()
+        }
+    }
+
+    private fun startBreakTimer(totalSeconds: Int, settings: TimerSettings) {
+        timerJob?.cancel()
+        _uiState.update { it.copy(isBreak = true) }
+        timerJob = viewModelScope.launch {
+            var remaining = totalSeconds
+            while (remaining > 0) {
+                _uiState.update {
+                    it.copy(
+                        timerState = TimerState.BreakRunning(
+                            durationMinutes = settings.breakDuration,
+                            remainingSeconds = remaining,
+                            totalSeconds = settings.breakDuration * 60
+                        ),
+                        isRunning = true
+                    )
+                }
+                delay(1000)
+                remaining--
             }
-            onTimerComplete()
+            onBreakComplete()
         }
     }
 
     fun pauseTimer() {
         hapticsHelper.tick()
         timerJob?.cancel()
-        val current = _uiState.value.timerState as? TimerState.Running ?: return
+        val current = _uiState.value.timerState
         val settings = _uiState.value.settings
-        _uiState.update {
-            it.copy(
-                timerState = TimerState.Paused(
-                    durationMinutes = settings.focusDuration,
-                    remainingSeconds = current.remainingSeconds,
-                    totalSeconds = settings.focusDuration * 60
-                ),
-                isRunning = false
-            )
+        
+        when (current) {
+            is TimerState.Running -> {
+                _uiState.update {
+                    it.copy(
+                        timerState = TimerState.Paused(
+                            durationMinutes = settings.focusDuration,
+                            remainingSeconds = current.remainingSeconds,
+                            totalSeconds = settings.focusDuration * 60
+                        ),
+                        isRunning = false
+                    )
+                }
+            }
+            is TimerState.BreakRunning -> {
+                _uiState.update {
+                    it.copy(
+                        timerState = TimerState.BreakPaused(
+                            durationMinutes = settings.breakDuration,
+                            remainingSeconds = current.remainingSeconds,
+                            totalSeconds = settings.breakDuration * 60
+                        ),
+                        isRunning = false
+                    )
+                }
+            }
+            else -> {}
         }
     }
 
@@ -119,7 +178,8 @@ class TimerViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 timerState = TimerState.Idle(settings.focusDuration),
-                isRunning = false
+                isRunning = false,
+                isBreak = false
             )
         }
     }
@@ -131,29 +191,57 @@ class TimerViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 timerState = TimerState.Idle(settings.focusDuration),
-                isRunning = false
+                isRunning = false,
+                isBreak = false
             )
         }
     }
 
-    private fun onTimerComplete() {
+    private fun onFocusComplete() {
         hapticsHelper.complete()
-
-        // Play sound if enabled
         val settings = _uiState.value.settings
+        
+        _uiState.update {
+            it.copy(
+                timerState = TimerState.Completed(settings.focusDuration),
+                isRunning = false
+            )
+        }
+        
+        if (settings.soundEnabled) {
+            playCompletionSound()
+        }
+    }
+
+    private fun onBreakComplete() {
+        hapticsHelper.complete()
+        val settings = _uiState.value.settings
+        
+        _uiState.update {
+            it.copy(
+                timerState = TimerState.BreakCompleted(settings.breakDuration),
+                isRunning = false,
+                isBreak = false
+            )
+        }
+        
         if (settings.soundEnabled) {
             playCompletionSound()
         }
     }
 
     private fun playCompletionSound() {
-        // TODO: Add actual sound file to res/raw and play it
-        // For now, using system notification sound
         try {
-            // This would be: MediaPlayer.create(context, R.raw.timer_complete)
-            // For MVP without sound file, we skip actual playback
+            // Use system notification sound
+            val notificationUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            mediaPlayer?.release()
+            mediaPlayer = MediaPlayer.create(context, notificationUri)
+            mediaPlayer?.apply {
+                setOnCompletionListener { it.release() }
+                start()
+            }
         } catch (e: Exception) {
-            // Sound not available
+            // Sound not available, continue silently
         }
     }
 
@@ -167,6 +255,7 @@ class TimerViewModel @Inject constructor(
     data class TimerUiState(
         val timerState: TimerState = TimerState.Idle(25),
         val settings: TimerSettings = TimerSettings(),
-        val isRunning: Boolean = false
+        val isRunning: Boolean = false,
+        val isBreak: Boolean = false
     )
 }

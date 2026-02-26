@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.giruai.focusbuddy.ui.theme.Primary
 import com.giruai.focusbuddy.ui.theme.PrimaryGradientEnd
+import com.giruai.focusbuddy.ui.theme.Success
+import com.giruai.focusbuddy.ui.theme.SuccessDark
 import com.giruai.focusbuddy.ui.theme.SurfaceVariant
 import com.giruai.focusbuddy.ui.theme.TextPrimary
 import com.giruai.focusbuddy.ui.theme.TextSecondary
@@ -42,6 +43,7 @@ fun ProgressRing(
     ringSize: Dp = 280.dp,
     strokeWidth: Dp = 12.dp,
     trackColor: Color = SurfaceVariant,
+    color: Color = Primary
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = progress.coerceIn(0f, 1f),
@@ -49,11 +51,16 @@ fun ProgressRing(
         label = "progress"
     )
 
+    // Determine gradient colors based on the primary color
+    val gradientEndColor = when (color) {
+        Success -> SuccessDark
+        else -> PrimaryGradientEnd
+    }
+
     Box(
         modifier = modifier.size(ringSize),
         contentAlignment = Alignment.Center
     ) {
-        // Progress ring canvas
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -66,7 +73,7 @@ fun ProgressRing(
             val centerX = canvasWidth / 2
             val centerY = canvasHeight / 2
 
-            // Draw track (background ring)
+            // Draw track
             drawCircle(
                 color = trackColor,
                 radius = radius,
@@ -74,7 +81,7 @@ fun ProgressRing(
                 style = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
             )
 
-            // Draw tick marks every 5 minutes (12 marks for 60 min, but we show based on duration)
+            // Draw tick marks
             val tickCount = 12
             for (i in 0 until tickCount) {
                 val angle = (i * 30 - 90) * (Math.PI / 180f)
@@ -94,22 +101,14 @@ fun ProgressRing(
                 )
             }
 
-            // Draw progress arc with gradient
+            // Draw progress arc
             val sweepAngle = animatedProgress * 360f
-
-            // Create gradient brush
             val gradientBrush = Brush.sweepGradient(
-                colors = listOf(
-                    PrimaryGradientEnd,
-                    Primary,
-                    PrimaryGradientEnd
-                ),
+                colors = listOf(gradientEndColor, color, gradientEndColor),
                 center = Offset(centerX, centerY)
             )
 
-            // Rotate to start from top (-90 degrees)
             rotate(degrees = -90f, pivot = Offset(centerX, centerY)) {
-                // Draw glow effect behind the progress
                 drawArc(
                     brush = gradientBrush,
                     startAngle = 0f,
@@ -121,7 +120,6 @@ fun ProgressRing(
                     alpha = 0.3f
                 )
 
-                // Draw main progress arc
                 drawArc(
                     brush = gradientBrush,
                     startAngle = 0f,
@@ -133,32 +131,27 @@ fun ProgressRing(
                 )
             }
 
-            // Draw glow dot at the end of progress
+            // Draw glow dot at the end
             if (sweepAngle > 0) {
                 val endAngleRad = (sweepAngle - 90) * (Math.PI / 180f)
                 val dotX = centerX + cos(endAngleRad).toFloat() * radius
                 val dotY = centerY + sin(endAngleRad).toFloat() * radius
 
-                // Outer glow
                 drawCircle(
-                    color = Primary.copy(alpha = 0.4f),
+                    color = color.copy(alpha = 0.4f),
                     radius = strokeWidth.toPx() * 1.5f,
                     center = Offset(dotX, dotY)
                 )
 
-                // Inner dot
                 drawCircle(
-                    color = Primary,
+                    color = color,
                     radius = strokeWidth.toPx() * 0.6f,
                     center = Offset(dotX, dotY)
                 )
             }
         }
 
-        // Time text in center
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = timeText,
                 fontSize = 72.sp,
