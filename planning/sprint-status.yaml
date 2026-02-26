@@ -79,34 +79,34 @@ stories:
     title: "Setup DataStore for preferences"
     epic: "epic-003"
     priority: "must-have"
-    status: "planned"
-    assignee: null
-    branch: null
+    status: "done"
+    assignee: "focus-buddy-agent"
+    branch: "main"
     pr: null
-    started: null
-    completed: null
+    started: "2026-02-27T17:35:00Z"
+    completed: "2026-02-27T17:50:00Z"
     
   - id: "story-008"
     title: "Implement settings screen UI"
     epic: "epic-003"
     priority: "must-have"
-    status: "planned"
-    assignee: null
-    branch: null
+    status: "done"
+    assignee: "focus-buddy-agent"
+    branch: "main"
     pr: null
-    started: null
-    completed: null
+    started: "2026-02-27T17:35:00Z"
+    completed: "2026-02-27T17:50:00Z"
     
   - id: "story-009"
     title: "Connect settings to timer"
     epic: "epic-003"
     priority: "must-have"
-    status: "planned"
-    assignee: null
-    branch: null
+    status: "done"
+    assignee: "focus-buddy-agent"
+    branch: "main"
     pr: null
-    started: null
-    completed: null
+    started: "2026-02-27T17:35:00Z"
+    completed: "2026-02-27T17:50:00Z"
     
   # Epic 4: Haptics & Polish
   - id: "story-010"
@@ -144,7 +144,7 @@ stories:
 
 metrics:
   total_stories: 12
-  completed: 6
+  completed: 9
   in_progress: 0
   ready_for_dev: 0
   planned: 9
