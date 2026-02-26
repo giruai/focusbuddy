@@ -48,14 +48,15 @@ app/src/main/java/com/giruai/focusbuddy/
 └── util/            # Utilities (haptics, etc.)
 ```
 
-## Sprint 2 — UI Fixes 🔄
+## Sprint 2 — UI Fixes ✅ COMPLETE
 
 | Story | Status | Description |
 |-------|--------|-------------|
-| story-013 | 🔄 Ready | Fix progress ring direction |
-| story-014 | 🔄 Ready | Fix control buttons layout |
-| story-015 | 🔄 Ready | Settings as bottom sheet |
-| story-016 | 🔄 Ready | Polish settings UI |
+| story-013 | ✅ Done | Fix progress ring direction (fills up) |
+| story-014 | ✅ Done | Fix control buttons layout |
+| story-015 | ✅ Done | Settings as bottom sheet |
+| story-016 | ✅ Done | Polish settings UI |
+| story-017 | ✅ Done | Fix bottom sheet background color |
 
 ## Sprint 1 — Foundation ✅ COMPLETE
 
@@ -74,7 +75,7 @@ app/src/main/java/com/giruai/focusbuddy/
 | story-011 | ✅ Done | Completion sound |
 | story-012 | ✅ Done | Polish animations |
 
-**MVP Status**: ✅ **COMPLETE** — Sprint 2 in progress
+**Status**: ✅ **RELEASE v1.0 READY** — 17/17 stories complete
 
 ## License
 
