@@ -113,38 +113,38 @@ stories:
     title: "Implement haptic feedback system"
     epic: "epic-004"
     priority: "should-have"
-    status: "planned"
-    assignee: null
-    branch: null
+    status: "done"
+    assignee: "focus-buddy-agent"
+    branch: "main"
     pr: null
-    started: null
-    completed: null
+    started: "2026-02-27T17:55:00Z"
+    completed: "2026-02-27T18:05:00Z"
     
   - id: "story-011"
     title: "Add completion sound"
     epic: "epic-004"
     priority: "should-have"
-    status: "planned"
-    assignee: null
-    branch: null
+    status: "done"
+    assignee: "focus-buddy-agent"
+    branch: "main"
     pr: null
-    started: null
-    completed: null
+    started: "2026-02-27T17:55:00Z"
+    completed: "2026-02-27T18:05:00Z"
     
   - id: "story-012"
     title: "Polish animations and transitions"
     epic: "epic-004"
     priority: "should-have"
-    status: "planned"
-    assignee: null
-    branch: null
+    status: "done"
+    assignee: "focus-buddy-agent"
+    branch: "main"
     pr: null
-    started: null
-    completed: null
+    started: "2026-02-27T17:55:00Z"
+    completed: "2026-02-27T18:05:00Z"
 
 metrics:
   total_stories: 12
-  completed: 9
+  completed: 12
   in_progress: 0
   ready_for_dev: 0
   planned: 9
